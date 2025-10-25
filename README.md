@@ -6,30 +6,78 @@ Hecho por: Sara Pérez
 
 En este proyecto se puede modificar el formato de las imágenes.
 
-Al ejecutar: **java es.etg.dam.App monalisa.jpg monalisa.png** desde la carpeta **classes** se genera otra imágen con el formato a png.
-
 En el archivo **App.java** se ejecuta el comando con los dos parámetros dados:
 
 ```java
 public class App {
 
-    public static final int NUM0 = 0;
-    public static final int NUM1 = 1;
     private static final String COMANDO = "convert";
-    private static final String MSG_ERROR_ARGS = "Se deben introducir los valores correctamente";
+    private static final String RUTA = "src/main/resources/";
+    public static final String ENTRADA = RUTA + "monalisa.jpg";
+    public static final String SALIDA = RUTA + "monalisa.png";
 
     public static void main(String[] args) throws IOException, Exception {
 
-        if (args.length < 2) {
-            System.out.println(MSG_ERROR_ARGS);
-            return;
-        }
-
-        String imagenEntrada = args[NUM0];
-        String imagenSalida = args[NUM1];
-
-        Ejecutable ejec = new Comando(COMANDO, imagenEntrada, imagenSalida);
+        Ejecutable ejec = new Comando(COMANDO, ENTRADA, SALIDA);
         ejec.ejecutar();
     }
+}
+```
+
+La clase **Comando** obtiene los datos de **App** y los utiliza el el método ejecutar:
+
+```java
+@Data
+@AllArgsConstructor
+public class Comando implements Ejecutable {
+
+    private String comando;
+    private String parametro;
+    private String parametro2;
+
+
+    public Comando(String comando) {
+        this.comando = comando;
+    }
+
+    @Override
+    public String ejecutar() throws IOException, Exception {
+
+        String MSG_ERROR = "Ha ocurrido un error al ejecutar el comando.";
+        String N = "\n";
+        int NUM0 = 0;
+        int NUM_ERR = 34;
+        StringBuilder output = new StringBuilder();
+
+        String[] comand = {comando, parametro, parametro2};
+
+        try {
+            Process process = Runtime.getRuntime().exec(comand);
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                output.append(line).append(N);
+            }
+
+            int exitVal = process.waitFor();
+            if (exitVal == NUM0) {
+            } else {
+                System.out.println(MSG_ERROR);
+            }
+
+        } catch (IOException | InterruptedException e) {
+            System.exit(NUM_ERR);
+        }
+        return output.toString();
+    }
+}
+```
+
+**Ejecutable** es la interfaz que lanza la clase **Comando**:
+
+```java
+public interface Ejecutable {
+    String ejecutar() throws IOException, Exception;
 }
 ```
