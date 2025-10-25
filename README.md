@@ -4,7 +4,7 @@ Hecho por: Sara Pérez
 
 > El link del repositorio es: <https://github.com/SaraPF3/imagenes>
 
-En este proyecto se puede modificar el formato de las imágenes.
+En este proyecto se puede modificar el formato de las imágenes. Para ello, desde la carpeta classes se ejecuta, por ejemplo, el comando **java es.etg.dam.App monalisa.jpg monalisa.png**, para obtener la imagen con la extensión png.
 
 En el archivo **App.java** se ejecuta el comando con los dos parámetros dados:
 
@@ -12,21 +12,29 @@ En el archivo **App.java** se ejecuta el comando con los dos parámetros dados:
 public class App {
 
     private static final String COMANDO = "convert";
-    private static final String RUTA = "src/main/resources/";
-    public static final String ENTRADA = RUTA + "monalisa.jpg";
-    public static final String SALIDA = RUTA + "monalisa.png";
-    private static final String MSG_ERROR = "Se deben introducir los valores correctamente";
+    public static final int NUM0 = 0;
+    public static final int NUM1 = 1;
+    private static final String MSG_ERROR = "La extensión de la imagen no es correcta";
+    private static final String MSG_ERROR_ARGS = "Se deben introducir los dos valores correctamente";
     public static final boolean TR = true;
     public static final boolean FL = false;
-    private static final String[] EXT_VALIDAS = {".jpg", ".jpeg", ".png", ".gif", ".tiff", "webp"};
+    private static final String[] EXT_VALIDAS = {".jpg", ".jpeg", ".png", ".gif", ".tiff", ".webp"};
 
     public static void main(String[] args) throws IOException, Exception {
 
         boolean exito = FL;
 
+        if (args.length < 2) {
+            System.out.println(MSG_ERROR_ARGS);
+            return;
+        }
+
+        String imagenEntrada = args[NUM0];
+        String imagenSalida = args[NUM1];
+
         for (String ext : EXT_VALIDAS) {
-            if (SALIDA.endsWith(ext)) {
-                Ejecutable ejec = new Comando(COMANDO, ENTRADA, SALIDA);
+            if (imagenSalida.endsWith(ext)) {
+                Ejecutable ejec = new Comando(COMANDO, imagenEntrada, imagenSalida);
                 ejec.ejecutar();
                 exito = TR;
             }
@@ -39,7 +47,7 @@ public class App {
 }
 ```
 
-La clase **Comando** obtiene los datos de **App** y los utiliza el el método ejecutar:
+La clase **Comando** obtiene los datos de **App** y los utiliza el método ejecutar:
 
 ```java
 @Data
@@ -59,7 +67,6 @@ public class Comando implements Ejecutable {
     public String ejecutar() throws IOException, Exception {
 
         String MSG_ERROR = "Ha ocurrido un error al ejecutar el comando.";
-        String N = "\n";
         int NUM0 = 0;
         int NUM_ERR = 34;
         StringBuilder output = new StringBuilder();
@@ -68,12 +75,6 @@ public class Comando implements Ejecutable {
 
         try {
             Process process = Runtime.getRuntime().exec(comand);
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                output.append(line).append(N);
-            }
 
             int exitVal = process.waitFor();
             if (exitVal == NUM0) {
