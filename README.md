@@ -4,7 +4,7 @@ Hecho por: Sara Pérez
 
 > El link del repositorio es: <https://github.com/SaraPF3/imagenes>
 
-En este proyecto se puede modificar el formato de las imágenes. Para ello, desde la carpeta classes se ejecuta, por ejemplo, el comando **java es.etg.dam.App monalisa.jpg monalisa.png**, para obtener la imagen con la extensión png.
+En este proyecto se puede modificar el formato de las imágenes. Para ello, desde la carpeta **classes** se ejecuta, por ejemplo, el comando **java es.etg.dam.App monalisa.jpg monalisa.png**, para obtener la imagen con la extensión png.
 
 En el archivo **App.java** se ejecuta el comando con los dos parámetros dados:
 
